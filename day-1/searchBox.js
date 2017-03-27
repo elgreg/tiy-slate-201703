@@ -13,7 +13,8 @@ class SearchBox {
       if(!currentSearch) return;
       console.log(currentSearch);
       const parts = currentSearch.split(" ");
-      // if any of the parts have a ':' in them, pass them as arguments to the endpointUrl
+      // if any of the parts have a ':' in them, we'll 
+      // pass them as arguments to the endpointUrl
       const args = {}
       const terms = [];
       for(let part of parts){
@@ -26,6 +27,9 @@ class SearchBox {
       }
       return {
           args: args,
+          // TODO: not using terms yet - was going to refine search
+          // results but need to think through how I would filter
+          // repolist from searchBox
           terms: terms
       }
   }
@@ -56,4 +60,5 @@ class SearchBox {
     this._searchBoxLabel.appendChild(this._searchInput);
     document.getElementById('searchBox').appendChild(this._searchBoxLabel);
   }
+  
 }
