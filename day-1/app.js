@@ -6,7 +6,8 @@ searchBox.render();
 searchBox.on('keyup', repoList.render.bind(repoList));
 
 // Initial result
-new Ajax(githubSearchUrl, '7531f7a87987c6ceeb60b2a66c5035')
+// TODO: there should be a way to avoid calling this again in the searchBox event
+new Ajax(githubSearchUrl, 'e16c05f318bcd8d512ecd0fa16071b2be791e3a6')
   .then((data) => {
     repoList.render(data);
     return data;

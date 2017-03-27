@@ -49,7 +49,7 @@ class SearchBox {
                   }
                   endpoint += args.join('&');
               }
-              new Ajax(endpoint)
+              new Ajax(endpoint, 'e16c05f318bcd8d512ecd0fa16071b2be791e3a6')
                 .then(callback)
                 .get();
           }, 300)
@@ -60,5 +60,5 @@ class SearchBox {
     this._searchBoxLabel.appendChild(this._searchInput);
     document.getElementById('searchBox').appendChild(this._searchBoxLabel);
   }
-  
+
 }
