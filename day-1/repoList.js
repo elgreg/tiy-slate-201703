@@ -14,7 +14,7 @@ class RepoList {
     let li = document.createElement('li');
     let a = document.createElement('a');
     a.innerText = repoObj.name;
-    a.href = repoObj.url;
+    a.href = repoObj.html_url;
     li.appendChild(a); 
     this._list.appendChild(li);
   }
