@@ -4,7 +4,24 @@
     <title>This is wonderful stuff.</title>
   </head>
   <body>
+    <p>
+      Use the facets to refine and sort my user endpoint on github!
+      <img src="facets.png" width=400/>
+    <p>
+    <p>For example, if you search for <code>type:member sort:created direction:desc</code>, you'll see the 
+    first repos I was a member of</p>
+
+    <div id="searchBox"></div>
+    
+    <div id="repoListContainer"></div>
+
+    <script src="./debounce.js"></script>
+    <script src="./searchBox.js"></script>
+    <script src="./repoList.js"></script>
+    <script src="./ajax.js"></script>
     <script src="./app.js"></script>
+
+
     <!--<script src="./crazy.js"></script>-->
     <!--<script src="./bind-example.js"></script>-->
   </body>

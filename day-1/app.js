@@ -1,43 +1,15 @@
-class Button {
-  constructor() {
-    this._button = document
-      .createElement('button');
-  }
+var repoList = new RepoList();
+var githubSearchUrl = 'https://api.github.com/users/elgreg/repos';
+var searchBox = new SearchBox(githubSearchUrl, 'Search repos: ');
 
-  get text() {
-    return this._button
-               .innerHTML;
-  }
+searchBox.render();
+searchBox.on('keyup', repoList.render.bind(repoList));
 
-  set text(value) {
-    this._button
-        .innerHTML = value;
-  }
-
-  render() {
-    return this._button;
-  }
-
-  on(name, callback) {
-    this._button
-        .addEventListener(name, function () {
-          // inside this function,
-          // "this" refers to the
-          // <BUTTON> element.
-
-          // Print a message
-          console.log('You pressed the button.');
-          // Call the callback with "this"
-          // bound appropriately
-          callback.call(this);
-        });
-  }
-}
-
-var button = new Button();
-button.text = 'Hi, Curtis';
-document.body
-        .appendChild(button.render());
-button.on('click', function() {
-  this.style.color = 'white';
-});
+// Initial result
+new Ajax(githubSearchUrl, '7531f7a87987c6ceeb60b2a66c5035')
+  .then((data) => {
+    repoList.render(data);
+    return data;
+  })
+  .catch(e => console.log(e))
+  .get();
