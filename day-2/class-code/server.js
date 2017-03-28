@@ -18,6 +18,8 @@ let readfile = bluebird.promisify(fs.readFile);
 
 let dir = './sandwich';
 
+let loadedGames = [];
+
 readdir(dir)
   .then((files) => files.filter((file) => file !== '.' && file !== '..'))
   .map((filename) => {
@@ -26,7 +28,9 @@ readdir(dir)
   .map((gameData) => {
     return TicTacToeGame.fromJson(gameData);
   })
-  .then((games) => console.log(games))
+  .then((games) => loadedGames = games)
+  .then(() => console.log(loadedGames))
   .catch(err => console.error(err));
 
 
+module.exports = loadedGames;
