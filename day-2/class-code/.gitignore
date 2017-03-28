@@ -30,3 +30,6 @@ public
 
 build/env
 *.pyc
+
+node_modules
+

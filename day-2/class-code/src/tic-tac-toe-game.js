@@ -1,4 +1,5 @@
 class Board {
+
   constructor(empty) {
     this._empty = empty;
     this._state = [0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -29,6 +30,10 @@ class Board {
            this._rowWinner(2) ||
            this._ldiagWinner() ||
            this._rdiagWinner();
+  }
+
+  get state() {
+    return this._state.slice();
   }
 
   _ldiagWinner() {
@@ -74,9 +79,13 @@ class Board {
       return row[0];
     }
   }
+
+
 }
 
 class Singularity {
+  
+
   constructor() {
     this._decisionMatrix = [
       [1, 1],
@@ -102,6 +111,15 @@ class Singularity {
 }
 
 class TicTacToeGame {
+  
+  static fromJson(json) {
+    let jsony = JSON.parse(json)
+    
+    let game = new this({humanFirst: jsony.humanFirst})
+    game._board._state = jsony.boardState;
+    return game 
+  }
+
   constructor({ humanFirst: hf } = { humanFirst: true }) {
     this._humanIndex = hf ? 1 : 2;
     this._computerIndex = hf ? 2 : 1;
@@ -130,6 +148,15 @@ class TicTacToeGame {
     return this.board.winner;
   }
 
+  toJson() {
+    return JSON.stringify({
+      humanFirst: this.humanFirst,
+      boardState: this.board.state,
+      winner: this.winner || null,
+      isOver: this.isOver()
+    })
+  }
+
   _letComputerMakeMove() {
     if (this._board.winner === undefined) {
       let [row, col] = this._computer.decideMove(this._board);
@@ -138,6 +165,7 @@ class TicTacToeGame {
       }
     }
   }
+
 }
 
 module.exports = TicTacToeGame;
