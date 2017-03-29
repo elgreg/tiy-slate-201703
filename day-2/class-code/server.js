@@ -21,13 +21,8 @@ let dir = './sandwich';
 let loadedGames = [];
 
 readdir(dir)
-  .then((files) => files.filter((file) => file !== '.' && file !== '..'))
-  .map((filename) => {
-    return readfile(`${dir}/${filename}`, 'utf8');
-  })
-  .map((gameData) => {
-    return TicTacToeGame.fromJson(gameData);
-  })
+  .map((filename) => readfile(`${dir}/${filename}`, 'utf8'))
+  .map(TicTacToeGame.fromJson)
   .then((games) => loadedGames = games)
   .then(() => console.log(loadedGames))
   .catch(err => console.error(err));

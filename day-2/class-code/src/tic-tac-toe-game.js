@@ -115,7 +115,7 @@ class TicTacToeGame {
   static fromJson(json) {
     let jsony = JSON.parse(json)
     
-    let game = new this({humanFirst: jsony.humanFirst})
+    let game = new TicTacToeGame({humanFirst: jsony.humanFirst})
     game._board._state = jsony.boardState;
     return game 
   }
