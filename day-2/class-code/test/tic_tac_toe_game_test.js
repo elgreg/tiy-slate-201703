@@ -166,4 +166,12 @@ describe('Tic Tac Toe Game', () => {
 
   });
 
+  it ('should create a file when I save the game to disk', () => {
+    let game = new TicTacToeGame();
+
+    let file = game.save();
+
+    expect()
+
+  });
 });

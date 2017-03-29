@@ -114,13 +114,13 @@ class TicTacToeGame {
   
   static fromJson(json) {
     let jsony = JSON.parse(json)
-    
     let game = new TicTacToeGame({humanFirst: jsony.humanFirst})
     game._board._state = jsony.boardState;
     return game 
   }
 
   constructor({ humanFirst: hf } = { humanFirst: true }) {
+    this.id = new Date().valueOf();
     this._humanIndex = hf ? 1 : 2;
     this._computerIndex = hf ? 2 : 1;
     this.humanFirst = hf;

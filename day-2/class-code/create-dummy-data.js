@@ -12,13 +12,14 @@ let mkdir = (path) => {
         return reject(err);
       }
       resolve();
-    });
+    })
   });
 }
 
 
 let makeANewGame = () => {
-  let game = new TicTacToeGame();
+
+  let game = new TicTacToeGame(Math.random() >= 0.5);
 
   game.play(
     Math.floor(Math.random() * 3),
