@@ -1,6 +1,7 @@
 'use strict';
 
-let TicTacToeGame = require('./src/tic-tac-toe-game.js');
+let TicTacToeGame = require('./src/tic-tac-toe-game');
+let DiskDb = require('./src/disk-db');
 let fs = require('fs');
 let bluebird = require('bluebird');
 
@@ -28,23 +29,16 @@ nunjucks.configure('templates/', {
 // objectify the contents into a module-level list of games
 
 let dir = './sandwich';
+let db = new DiskDb(dir)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(expressFactoryFunction.static('static'));
 
-app.use(function(req, res, next){
-  console.log(`A request went by to ${req.path}`);
-  next();
-});
-
-
 // handle deletes
 app.use(function(req, res, next){
-  console.log(`Some custom-ass middleware`);
   req.method = req.body['X-HTTP-METHOD'] && req.body['X-HTTP-METHOD'].toUpperCase() || req.method;
-  console.log(req.method);
   next();
 });
 
@@ -68,10 +62,12 @@ app.delete('/:gameIndex', function(req, res){
   if(!game){
     res.status(404).end('HOW YOU DO THAT?!');
   }
-  // TODO: write game.delete()
-  // game.delete()
-  globalGames.splice(gameIndex,1);
-  res.redirect('/');
+  
+  db.delete(game.fileName)
+    .then(() => globalGames.splice(gameIndex,1))
+    .then(() => res.redirect('/'))
+    .catch(err => res.status(500).end(err));
+  
 });
 
 app.post('/:gameIndex', function(req, res){
@@ -81,9 +77,14 @@ app.post('/:gameIndex', function(req, res){
     res.status(404).end('HOW YOU DO THAT?!');
   }
 
-  game.play(Number.parseInt(req.body.row), Number.parseInt(req.body.col));
+  game.game.play(Number.parseInt(req.body.row), Number.parseInt(req.body.col));
 
-  res.redirect(`/${gameIndex}`);
+  db.save(game.fileName, game.game.toJson())
+    .then(() => res.redirect(`/${gameIndex}`))
+    .catch(err => {
+      res.status(500).end(err)
+    });  
+  
 });
 
 app.get('/:gameIndex', function(req, res){
@@ -98,21 +99,19 @@ app.get('/:gameIndex', function(req, res){
   });
 });
 
-
 app.post('/', function(req, res){
-  let game = new TicTacToeGame(Math.random() >= 0.5)
-
-  globalGames.push(game);
+  let game = {
+    fileName: new Date().valueOf() + ".json",
+    game: new TicTacToeGame(Math.random() >= 0.5)
+  }
   
-  res.redirect(`/${globalGames.length - 1}`);
+  db.save(game.fileName, game.game.toJson())
+    .then(() => globalGames.push(game))
+    .then(() => res.redirect(`/${globalGames.length - 1}`))
+    .catch(err => {
+      res.status(500).end(err)
+    });
 
-  // TODO: Persist this to disk
-  // game.save()
-  //   .then(globalGames.push(game))
-  //   .then(() => res.redirect(`/${globalGames.length - 1}`))
-  //   .catch(err => {
-  //     res.status(500).end(err)
-  //   });
 });
 
 app.get('/', function(req, res){
@@ -123,11 +122,16 @@ app.get('/', function(req, res){
   })
 });
 
-
-
 readdir(dir)
-  .map((filename) => readfile(`${dir}/${filename}`, 'utf8'))
-  .map(TicTacToeGame.fromJson)
+  //.map(files => files.filter((filename)=> filename !== ".DS_Store"))
+  .map((filename) => bluebird.props({
+    json: readfile(`${dir}/${filename}`, 'utf8'),
+    fileName: filename
+  }))
+  .map(gameDesc => {
+    gameDesc.game = TicTacToeGame.fromJson(gameDesc.json);
+    return gameDesc;
+  })
   .then((games) => {
     globalGames = games;
     let port = process.env.PORT || 8080;

@@ -42,7 +42,7 @@ for (let i of [1, 2]){
       }
     })
     .then(({fileName, data}) => {
-       writeFile(fileName, data);
+       return writeFile(fileName, data)
     });
 }
 
