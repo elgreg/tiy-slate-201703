@@ -1,0 +1,55 @@
+{% macro personlizedMessage(index, game) %}
+  <a href="/{{ index }}"> A game where
+  {% if game.humanFirst %}
+    
+    {{ game.humanFirst }}
+
+    you
+  {% else %}
+    the computer
+  {% endif %}
+  went first</a>
+  <form method="POST" action="/{{ index }}">
+    <button type="submit">🗑️</button>
+    <input type="hidden" name="X-HTTP-METHOD" value="DelEte">
+  </form>
+{% endmacro %}
+
+
+{% macro gameBoard(gameIndex, game) %}
+  
+  <h1 align=center>
+  {% if game.winner === 1 %}
+    winner is {{ 'you' if game.humanFirst else 'computer'}}
+  {% elif game.winner === 2 %}
+    winner is {{ 'computer' if game.humanFirst else 'you'}}
+  {% endif %}
+  </h1>
+  
+  <table style="zoom:3;font-family:sans-serif" border=2 cellpadding=2 cellspacing=6 align=center>
+    {% for row in range(3) %}
+    <tr colspan=3>
+      {% for col in range(3) %}
+        <td align=center>
+          {% if game.winner %}<marquee>{% endif %}
+          {% if game.board.whatsInThisSpace(row, col) === 1 %}
+            X
+          {% elif game.board.whatsInThisSpace(row, col) === 2 %}
+            O
+          {% elif not game.winner %}
+            <form method=POST action="/{{ gameIndex }}">
+              <button type="submit">&nbsp;&nbsp;</button>
+              <input type="hidden" value="{{ row }}" name="row" />
+              <input type="hidden" value="{{ col }}" name="col" />
+            </form>
+          {% else %}
+              &nbsp;&nbsp;
+          {% endif %}
+          {% if game.winner %}</marquee>{% endif %}
+          </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+    <caption>X represents {{ 'you' if game.humanFirst else 'the computer' }} who played first</caption>
+    </table>
+{% endmacro %}

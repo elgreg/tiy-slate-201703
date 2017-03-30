@@ -1,0 +1,32 @@
+{% extends "parentTemplate.html" %}
+
+{% block ticTacToeRelatedMaterial %}
+
+<!doctype html>
+
+  {% include "macros.html" %}
+
+  {% import "macros.html" as myMacros %}
+  
+  <p>We have {{ games | length }} games for you to play</p>
+
+  <h2>Games in progress</h2>
+  <ul>
+    {% for game in games %}
+      {% if not game.game.isOver() %}
+      <li>{{ myMacros.personlizedMessage(loop.index0, game.game) }}</li>
+      {% endif %} 
+    {% endfor %}
+  </ul>
+  
+  <h2>Old games</h2>
+  <ul>
+    {% for game in games %}
+      {% if game.game.isOver() %}
+      <li>{{ myMacros.personlizedMessage(loop.index0, game.game) }}</li>
+      {% endif %} 
+    {% endfor %}
+  </ul>
+
+
+{% endblock %}

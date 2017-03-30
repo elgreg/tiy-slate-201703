@@ -19,7 +19,7 @@ let mkdir = (path) => {
 
 let makeANewGame = () => {
 
-  let game = new TicTacToeGame(Math.random() >= 0.5);
+  let game = new TicTacToeGame({humanFirst = Math.random() >= 0.5});
 
   game.play(
     Math.floor(Math.random() * 3),

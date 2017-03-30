@@ -1,0 +1,12 @@
+{% extends "parentTemplate.html" %}
+
+{% block ticTacToeRelatedMaterial  %}
+
+  {% include "macros.html" %}
+  {% import "macros.html" as myMacros %}
+
+  <a href="/">&lArr; Back</a>
+
+  {{ myMacros.gameBoard(gameIndex, game.game) }}
+
+{% endblock %}

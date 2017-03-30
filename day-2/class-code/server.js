@@ -102,8 +102,9 @@ app.get('/:gameIndex', function(req, res){
 app.post('/', function(req, res){
   let game = {
     fileName: new Date().valueOf() + ".json",
-    game: new TicTacToeGame(Math.random() >= 0.5)
+    game: new TicTacToeGame({humanFirst: Math.random() >= 0.5})
   }
+  console.log(game.game);
   
   db.save(game.fileName, game.game.toJson())
     .then(() => globalGames.push(game))
